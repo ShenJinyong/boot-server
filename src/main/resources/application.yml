@@ -7,3 +7,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ANT_PATH_MATCHER
+  profiles:
+    # 激活文件
+    active: dev
