@@ -1,0 +1,9 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /ServerBoot
+spring:
+  # SpringBoot 2.6.0开始使用基于PathPatternParser的路径匹配，而Springfox版本一直没有更新还是使用的AntPathMatcher
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
