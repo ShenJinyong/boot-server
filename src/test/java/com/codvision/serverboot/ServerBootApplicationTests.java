@@ -10,7 +10,7 @@ class ServerBootApplicationTests {
 
     //记录器
     public static final Logger LOGGER = LoggerFactory.getLogger(ServerBootApplicationTests.class);
-    
+
     @Test
     public void contextLoads() {
         // 打印日志信息
