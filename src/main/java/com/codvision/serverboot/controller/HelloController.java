@@ -27,9 +27,9 @@ public class HelloController {
     @PostMapping("/create")
     public String createUser(){
         User user = new User();
-        user.setName("沈金勇");
+        user.setName("李兴");
         user.setSex("男");
-        user.setPhone("18365418110");
+        user.setPhone("18879792873");
         userService.save(user);
         List<User> users = userMapper.selectList(null);
         users.forEach(System.out::println);
