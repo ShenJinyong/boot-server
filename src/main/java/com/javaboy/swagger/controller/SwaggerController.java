@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Swagger测试")
 @RestController
 @RequestMapping("/swagger")
-public class IndexController {
+public class SwaggerController {
 
     @Parameter(name = "name",description = "姓名",required = true)
     @Operation(summary = "向客人问好")
