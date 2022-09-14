@@ -25,3 +25,14 @@ spring:
       connection-timeout: 30000
       #配置了这个query则每次拿连接的时候用这个query测试，否则就使用java.sql.Connection的isValid测试  推荐jdbc4不配置。
       connection-test-query: SELECT 1
+mybatis-plus:
+  # 全局配置
+  global-config:
+    # db配置
+    db-config:
+      # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-field: flag
+      # 逻辑已删除值(默认为 1)
+      logic-delete-value: 1
+      # 逻辑未删除值(默认为 0)
+      logic-not-delete-value: 0
