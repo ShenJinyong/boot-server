@@ -18,7 +18,7 @@ import lombok.Setter;
  * </p>
  *
  * @author 沈金勇438217638@qq.com
- * @since 2022-09-27 09:47:10
+ * @since 2022-09-27 03:02:23
  */
 @Getter
 @Setter
@@ -48,8 +48,21 @@ public class ServerRole {
     @Version
     private Integer version;
 
+    @ApiModelProperty("角色名称")
     @TableField("name")
     private String name;
+
+    @ApiModelProperty("角色权限字符")
+    @TableField("key")
+    private String key;
+
+    @ApiModelProperty("角色描述")
+    @TableField("description")
+    private String description;
+
+    @ApiModelProperty("父级角色id")
+    @TableField("parttent_id")
+    private String parttentId;
 
 
 }

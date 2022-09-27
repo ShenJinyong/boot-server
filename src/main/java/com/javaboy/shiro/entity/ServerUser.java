@@ -18,7 +18,7 @@ import lombok.Setter;
  * </p>
  *
  * @author 沈金勇438217638@qq.com
- * @since 2022-09-27 09:47:10
+ * @since 2022-09-27 03:02:23
  */
 @Getter
 @Setter
@@ -47,6 +47,54 @@ public class ServerUser {
     @TableField("version")
     @Version
     private Integer version;
+
+    @ApiModelProperty("姓名")
+    @TableField("name")
+    private String name;
+
+    @ApiModelProperty("用户名")
+    @TableField("username")
+    private String username;
+
+    @ApiModelProperty("昵称")
+    @TableField("nickname")
+    private String nickname;
+
+    @ApiModelProperty("密码")
+    @TableField("password")
+    private String password;
+
+    @ApiModelProperty("电话号码")
+    @TableField("mobile")
+    private String mobile;
+
+    @ApiModelProperty("邮箱")
+    @TableField("email")
+    private String email;
+
+    @ApiModelProperty("头像")
+    @TableField("avatar_url")
+    private String avatarUrl;
+
+    @ApiModelProperty("用户性别")
+    @TableField("sex")
+    private Integer sex;
+
+    @ApiModelProperty("最后登录ip")
+    @TableField("login_ip")
+    private String loginIp;
+
+    @ApiModelProperty("最后登录时间")
+    @TableField("login_date")
+    private Date loginDate;
+
+    @ApiModelProperty("登录次数")
+    @TableField("login_count")
+    private String loginCount;
+
+    @ApiModelProperty("所属组织id")
+    @TableField("dept_id")
+    private String deptId;
 
 
 }

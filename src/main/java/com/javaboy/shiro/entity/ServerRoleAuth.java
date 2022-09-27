@@ -18,7 +18,7 @@ import lombok.Setter;
  * </p>
  *
  * @author 沈金勇438217638@qq.com
- * @since 2022-09-27 09:47:10
+ * @since 2022-09-27 03:02:23
  */
 @Getter
 @Setter
@@ -55,6 +55,10 @@ public class ServerRoleAuth {
     @ApiModelProperty("权限id")
     @TableField("auth_id")
     private String authId;
+
+    @ApiModelProperty("权限类型（0:可访问，1:可授权）")
+    @TableField("auth_type")
+    private Integer authType;
 
 
 }

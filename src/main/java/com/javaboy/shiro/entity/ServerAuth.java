@@ -14,16 +14,16 @@ import lombok.Setter;
 
 /**
  * <p>
- * 权限表
+ * 用户表
  * </p>
  *
  * @author 沈金勇438217638@qq.com
- * @since 2022-09-27 09:47:10
+ * @since 2022-09-27 03:02:23
  */
 @Getter
 @Setter
 @TableName("server_auth")
-@ApiModel(value = "ServerAuth对象", description = "权限表")
+@ApiModel(value = "ServerAuth对象", description = "用户表")
 public class ServerAuth {
 
     @ApiModelProperty("主键")
@@ -48,37 +48,17 @@ public class ServerAuth {
     @Version
     private Integer version;
 
+    @ApiModelProperty("父权限id")
+    @TableField("parent_id")
+    private String parentId;
+
     @ApiModelProperty("权限名称")
-    @TableField("permissions")
-    private String permissions;
+    @TableField("auth_name")
+    private String authName;
 
-    @ApiModelProperty("姓名")
-    @TableField("name")
-    private String name;
-
-    @ApiModelProperty("用户名")
-    @TableField("username")
-    private String username;
-
-    @ApiModelProperty("昵称")
-    @TableField("nickname")
-    private String nickname;
-
-    @ApiModelProperty("密码")
-    @TableField("password")
-    private String password;
-
-    @ApiModelProperty("电话号码")
-    @TableField("mobile")
-    private String mobile;
-
-    @ApiModelProperty("邮箱")
-    @TableField("email")
-    private String email;
-
-    @ApiModelProperty("头像")
-    @TableField("avatar_url")
-    private String avatarUrl;
+    @ApiModelProperty("权限描述")
+    @TableField("description")
+    private String description;
 
 
 }

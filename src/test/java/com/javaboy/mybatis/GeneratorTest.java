@@ -47,7 +47,7 @@ public class GeneratorTest {
                         // 开启Swagger模式
                         .enableSwagger()
                         // 使用FileOverride覆盖开启覆盖模式，默认不覆盖
-                        // .fileOverride()
+                         .fileOverride()
                         // 禁止打开输出目录，默认打开
                         .disableOpenDir()
                 )
