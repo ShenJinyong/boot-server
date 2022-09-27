@@ -18,10 +18,22 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
-    public GroupedOpenApi userApi(){
+    public GroupedOpenApi swagger(){
         String[] paths = { "/swagger/**" };
         String[] packagedToMatch = { "com.javaboy.swagger.controller" };
         return GroupedOpenApi.builder().group("Swagger模块")
+                .pathsToMatch(paths)
+                .addOperationCustomizer((operation, handlerMethod) -> {
+                    return operation.addParametersItem(new HeaderParameter().name("groupCode").example("测试").description("集团code").schema(new StringSchema()._default("BR").name("groupCode").description("集团code")));
+                })
+                .packagesToScan(packagedToMatch).build();
+    }
+
+    @Bean
+    public GroupedOpenApi shiro(){
+        String[] paths = { "/shiro/**" };
+        String[] packagedToMatch = { "com.javaboy.shiro.controller" };
+        return GroupedOpenApi.builder().group("Shiro模块")
                 .pathsToMatch(paths)
                 .addOperationCustomizer((operation, handlerMethod) -> {
                     return operation.addParametersItem(new HeaderParameter().name("groupCode").example("测试").description("集团code").schema(new StringSchema()._default("BR").name("groupCode").description("集团code")));
