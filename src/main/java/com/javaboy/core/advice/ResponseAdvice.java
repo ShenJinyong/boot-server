@@ -105,7 +105,7 @@ public class ResponseAdvice implements ResponseBodyAdvice {
     @ResponseBody
     private ResponseEntity httpRequestMethodNotSupported(HttpRequestMethodNotSupportedException exception) {
         logErrorRequest(exception);
-        return ResponseEntity.fail(AppCode.UNSUPPORTED_METHOD);
+        return ResponseEntity.fail(AppCode.UNSUPPORTED_METHOD_TYPE);
     }
     /**
      * 不支持的请求
@@ -114,7 +114,7 @@ public class ResponseAdvice implements ResponseBodyAdvice {
     @ResponseBody
     private ResponseEntity noHandlerFoundException(NoHandlerFoundException exception) {
         logErrorRequest(exception);
-        return ResponseEntity.fail(AppCode.UNSUPPORTED_METHOD_TYPE);
+        return ResponseEntity.fail(AppCode.UNSUPPORTED_METHOD);
     }
 
     /**

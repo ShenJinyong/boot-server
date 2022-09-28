@@ -2,6 +2,13 @@ spring:
   # 应用名称
   application:
     name: ServerBoot
+  mvc:
+    # 如果访问404 抛出异常
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      # 不给系统资源添加映射
+      add-mappings: false
   # 数据源
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/server_boot
