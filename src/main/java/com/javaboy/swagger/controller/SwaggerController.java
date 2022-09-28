@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @description：Swagger测试
  * @date ：2022/9/14 11:53
  */
-@Tag(name = "Swagger测试")
+@Tag(name = "文档模块")
 @RestController
 @RequestMapping("/swagger")
 public class SwaggerController {

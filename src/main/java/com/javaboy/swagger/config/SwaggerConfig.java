@@ -28,6 +28,17 @@ public class SwaggerConfig {
                 })
                 .packagesToScan(packagedToMatch).build();
     }
+    @Bean
+    public GroupedOpenApi file(){
+        String[] paths = { "/file/**" };
+        String[] packagedToMatch = { "com.javaboy.file.controller" };
+        return GroupedOpenApi.builder().group("File模块")
+                .pathsToMatch(paths)
+                .addOperationCustomizer((operation, handlerMethod) -> {
+                    return operation.addParametersItem(new HeaderParameter().name("groupCode").example("测试").description("集团code").schema(new StringSchema()._default("BR").name("groupCode").description("集团code")));
+                })
+                .packagesToScan(packagedToMatch).build();
+    }
 
     @Bean
     public GroupedOpenApi shiro(){
