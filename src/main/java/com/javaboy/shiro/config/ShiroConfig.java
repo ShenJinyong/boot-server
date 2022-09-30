@@ -1,5 +1,7 @@
 package com.javaboy.shiro.config;
 
+import com.javaboy.shiro.filter.AuthorizationFilter;
+import com.javaboy.shiro.filter.LoginFilter;
 import com.javaboy.shiro.service.impl.UserRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 
 /**
@@ -35,28 +38,43 @@ public class ShiroConfig {
     // 第三步:创建ShiroFilterFactoryBean
     @Bean
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("getDefaultWebSecurityManager") DefaultWebSecurityManager defaultWebSecurityManager){
+        // 添加过滤器
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(defaultWebSecurityManager);
-        // 添加Shiro的内置过滤器
-        LinkedHashMap<String, String> filterMap = new LinkedHashMap<>();
-        // 授权，正常的情况下，没有授权跳转到未授权页面
-        filterMap.put("/user/add","perms[user:add]");
-        filterMap.put("/user/*","authc");
-        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
-        // 设置登录的请求
-        shiroFilterFactoryBean.setLoginUrl("/toLogin");
-        // 未授权页面
-        shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
+        /*
+         * anon:无需认证就可以访问
+         * authc:必须认证了才能访问
+         * user:必须拥有记住我功能才能用
+         * perms:拥有对某个资源的权限才能访问
+         * role:拥有某个角色权限才能访问
+         * */
+        // 使用Shiro的内置过滤器
+        LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
+        // swagger
+        filterChainDefinitionMap.put("/swagger-ui/*", "anon");
+        filterChainDefinitionMap.put("/v3/api-docs/*", "anon");
+        // 从数据库中读出权限和URL
+        filterChainDefinitionMap.put("/shiro/serverUser/login","anon");
+        filterChainDefinitionMap.put("/shiro/serverUser/register","anon");
+        filterChainDefinitionMap.put("/shiro/serverUser/loginOut","authc");
+        filterChainDefinitionMap.put("/shiro/serverUser/delete","authc");
+        filterChainDefinitionMap.put("/shiro/serverUser/update","authc");
+        filterChainDefinitionMap.put("/shiro/serverUser/queryOne","authc");
+        filterChainDefinitionMap.put("/shiro/serverUser/queryAll","roles[admin]");
+        filterChainDefinitionMap.put("/test/perms","perms[user:add]");
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
+        // 使用自定义的过滤器
+        LinkedHashMap<String, Filter> filters = new LinkedHashMap<>();
+        // 未登录 shiroFilterFactoryBean.setLoginUrl("/toLogin");
+        filters.put("authc", new LoginFilter());
+        // 未授权 shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
+        filters.put("perms", new AuthorizationFilter());
+        shiroFilterFactoryBean.setFilters(filters);
+
         return shiroFilterFactoryBean;
     }
 
-    /*
-     * anon:无需认证就可以访问
-     * authc:必须认证了才能访问
-     * user:必须拥有 记住我功能才能用
-     * perms:拥有对某个资源的权限才能访问
-     * role:拥有某个角色权限才能访问
-     * */
 
 }

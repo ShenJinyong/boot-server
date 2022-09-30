@@ -5,6 +5,9 @@ spring:
   mvc:
     # 如果访问404 抛出异常
     throw-exception-if-no-handler-found: true
+    pathmatch:
+      # 配置策略
+      matching-strategy: ant_path_matcher
   web:
     resources:
       # 不给系统资源添加映射

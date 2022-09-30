@@ -1,6 +1,5 @@
 package com.javaboy.shiro.service.impl;
 
-import com.javaboy.shiro.entity.JWTToken;
 import com.javaboy.shiro.entity.ServerUser;
 import com.javaboy.shiro.service.ServerAuthService;
 import com.javaboy.shiro.service.ServerRoleService;
@@ -45,10 +44,11 @@ public class UserRealm extends AuthorizingRealm {
         // 获取用户角色集
 //        Set<String> serverRoles = serverRoleService.selectRolePermissionByUserId(currentUser.getId());
 //        simpleAuthorizationInfo.addRoles(serverRoles);
+        simpleAuthorizationInfo.addRole("admin");
         // 获取用户权限集
 //        Set<String> serverAuths = serverAuthService.findUserPermissionsByUserId(currentUser.getId());
 //        simpleAuthorizationInfo.addStringPermissions(serverAuths);
-//        simpleAuthorizationInfo.addStringPermission("user:add");
+        simpleAuthorizationInfo.addStringPermission("user:add");
         return simpleAuthorizationInfo;
     }
 

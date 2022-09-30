@@ -3,7 +3,10 @@ package com.javaboy.core.advice;
 import com.javaboy.core.domain.ResponseEntity;
 import com.javaboy.core.enums.AppCode;
 import com.javaboy.core.exception.ServiceException;
+import io.swagger.v3.core.util.Json;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -26,7 +29,7 @@ import java.io.IOException;
 
 /**
  * @author ：沈金勇 438217638@qq.com
- * @description：
+ * @description：返回结果通知
  * @date ：2022/9/28 18:25
  */
 @Slf4j
@@ -47,6 +50,12 @@ public class ResponseAdvice implements ResponseBodyAdvice {
                                   Class selectedConverterType,
                                   ServerHttpRequest request,
                                   ServerHttpResponse response) {
+
+        // 拦截swagger相关请求
+        if(request.getURI().getPath().contains("swagger-ui") || request.getURI().getPath().contains("api-docs")){
+            return body;
+        }
+
         // 返回对象封装
         if (body instanceof ResponseEntity) {
             // 被exceptionHandler处理过了，直接返回
@@ -57,6 +66,8 @@ public class ResponseAdvice implements ResponseBodyAdvice {
         }else {
             return ResponseEntity.ok(body);
         }
+
+
     }
 
 
@@ -105,8 +116,9 @@ public class ResponseAdvice implements ResponseBodyAdvice {
     @ResponseBody
     private ResponseEntity httpRequestMethodNotSupported(HttpRequestMethodNotSupportedException exception) {
         logErrorRequest(exception);
-        return ResponseEntity.fail(AppCode.UNSUPPORTED_METHOD_TYPE);
+        return ResponseEntity.fail(AppCode.UN_SUPPORTED_METHOD_TYPE);
     }
+
     /**
      * 不支持的请求
      */
@@ -114,7 +126,7 @@ public class ResponseAdvice implements ResponseBodyAdvice {
     @ResponseBody
     private ResponseEntity noHandlerFoundException(NoHandlerFoundException exception) {
         logErrorRequest(exception);
-        return ResponseEntity.fail(AppCode.UNSUPPORTED_METHOD);
+        return ResponseEntity.fail(AppCode.UN_SUPPORTED_METHOD);
     }
 
     /**

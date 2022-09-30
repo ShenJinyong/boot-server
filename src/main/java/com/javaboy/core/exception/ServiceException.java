@@ -1,10 +1,8 @@
 package com.javaboy.core.exception;
 
-import com.javaboy.core.enums.AppCode;
-
 /**
  * @author ：沈金勇 438217638@qq.com
- * @description：
+ * @description：服务层异常
  * @date ：2022/9/28 18:37
  */
 public class ServiceException extends RuntimeException{
