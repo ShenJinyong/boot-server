@@ -1,5 +1,6 @@
-package com.javaboy.shiro.service.impl;
+package com.javaboy.shiro.util;
 
+import com.javaboy.core.exception.ServiceException;
 import com.javaboy.shiro.entity.ServerUser;
 import com.javaboy.shiro.service.ServerAuthService;
 import com.javaboy.shiro.service.ServerRoleService;
@@ -13,6 +14,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.springframework.context.annotation.Bean;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -34,13 +36,26 @@ public class UserRealm extends AuthorizingRealm {
     @Resource
     private ServerAuthService serverAuthService;
 
+    // 获取自定义域名称
+    @Override
+    public String getName() {
+        return "UserRealm";
+    }
+
+    // 判断shiro支持的token类型
+    @Override
+    public boolean supports(AuthenticationToken authenticationToken) {
+        // 指定当前 authenticationToken 需要为 ShiroAuthToken 的实例
+        return authenticationToken instanceof CustomToken || authenticationToken instanceof ShiroToken;
+
+    }
+
     // 授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         log.info("执行了授权=>AuthorizationInfo");
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        Subject subject = SecurityUtils.getSubject();
-        ServerUser currentUser = (ServerUser)subject.getPrincipal();
+        ServerUser currentUser = (ServerUser)principalCollection.getPrimaryPrincipal();
         // 获取用户角色集
 //        Set<String> serverRoles = serverRoleService.selectRolePermissionByUserId(currentUser.getId());
 //        simpleAuthorizationInfo.addRoles(serverRoles);
@@ -56,22 +71,34 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info("执行了认证=>AuthenticationInfo");
-        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        List<ServerUser> serverUserList = serverUserService.queryServerUserByUserName(token.getUsername());
+        String username = null;
+        try{
+            if(authenticationToken instanceof CustomToken){
+                // 自定义客户端登录类型处理
+                CustomToken customToken = (CustomToken) authenticationToken;
+                username = customToken.getUsername();
+            }
+        } catch (Exception e){
+            throw new AuthenticationException();
+        }
+        // 查询用户
+        List<ServerUser> serverUserList = serverUserService.queryServerUserByUserName(username);
         if(serverUserList.size() == 1){
             // 密码认证，shiro做~
-            SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(serverUserList.get(0), serverUserList.get(0).getPassword(), "");
+            String password = serverUserList.get(0).getPassword();
+            ServerUser serverUser = serverUserList.get(0);
+            SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(serverUser, password, getName());
             // 存储session
             Subject currentSubject = SecurityUtils.getSubject();
             Session session = currentSubject.getSession();
-            session.setAttribute("loginUser",serverUserList.get(0));
+            session.setAttribute("user",serverUser);
             return simpleAuthenticationInfo;
         }else if(serverUserList.size() == 0){
             // 抛出异常 UnKnownAccountException
-            return null;
+            throw new ServiceException(10000,"UnKnownAccountException");
         }else{
             // 抛出异常 RepeatKnownAccountException
-            return null;
+            throw new ServiceException(10001,"RepeatKnownAccountException");
         }
 
     }

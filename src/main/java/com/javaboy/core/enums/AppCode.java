@@ -16,6 +16,9 @@ public enum AppCode implements StatusCode{
     SYS_UNKNOWN(4005,"系统异常"),
     UN_LOGIN(4006,"未登录"),
     UN_AUTHORIZED(4007,"未授权"),
+    USERNAME_OR_PASSWORD_ERROR(4008,"用户名或者密码错误"),
+    NO_PASSWORD_TIMESTAMP_ERROR(4009,"免密时间戳错误"),
+    NO_PASSWORD_SIGNATURE_ERROR(4009,"免密签名错误"),
     APP_ERROR(400, "业务异常");
 
     private int code;

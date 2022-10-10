@@ -2,7 +2,8 @@ package com.javaboy.shiro.config;
 
 import com.javaboy.shiro.filter.AuthorizationFilter;
 import com.javaboy.shiro.filter.LoginFilter;
-import com.javaboy.shiro.service.impl.UserRealm;
+import com.javaboy.shiro.util.MyRetryLimitCredentialsMatcher;
+import com.javaboy.shiro.util.UserRealm;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,16 +23,19 @@ public class ShiroConfig {
 
     // 第一步:创建realm对象，需要自定义
     @Bean
-    public UserRealm userRealm(){
-        return new UserRealm();
+    public UserRealm userRealm(MyRetryLimitCredentialsMatcher matcher){
+        UserRealm userRealm = new UserRealm();
+        // 自定义密码匹配凭证管理器
+        userRealm.setCredentialsMatcher(matcher);
+        return userRealm;
     }
 
     // 第二步:创建DefaultWebSecurityManager
     @Bean
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm){
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("codLimitCredentialsMatcher") MyRetryLimitCredentialsMatcher matcher){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 关联UserRealm
-        securityManager.setRealm(userRealm);
+        securityManager.setRealm(userRealm(matcher));
         return securityManager;
     }
 
@@ -76,5 +80,10 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
+    // 自定义密码匹配凭证管理器
+    @Bean(name = "codLimitCredentialsMatcher")
+    public MyRetryLimitCredentialsMatcher hashedCredentialsMatcher() {
+        return new MyRetryLimitCredentialsMatcher();
+    }
 
 }
