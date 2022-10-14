@@ -23,7 +23,7 @@ class ServerBootApplicationTests {
     }
 
     // 定义数据源数据
-    private static String DATABASE_URL = "jdbc:mysql://127.0.0.1:3306/server_boot";
+    private static String DATABASE_URL = "jdbc:mysql://127.0.0.1:3306/server_boot?serverTimezone=UTC";
     private static String DATABASE_USERNAME = "root";
     private static String DATABASE_PASSWORD = "123456";
 
