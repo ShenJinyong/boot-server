@@ -40,4 +40,5 @@ public enum AppCode implements SystemStatus{
     public String getSystemStatusMessage() {
         return message;
     }
+
 }
