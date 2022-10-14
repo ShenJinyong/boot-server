@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ServerUserService extends IService<ServerUser> {
 
+    ServerUser queryServerUserByUserName(String username);
 }

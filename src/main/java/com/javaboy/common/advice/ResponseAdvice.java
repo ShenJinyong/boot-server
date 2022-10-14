@@ -54,7 +54,6 @@ public class ResponseAdvice implements ResponseBodyAdvice {
         if(request.getURI().getPath().contains("swagger-ui") || request.getURI().getPath().contains("api-docs")){
             return body;
         }
-
         // 返回对象封装
         if (body instanceof ResponseEntity) {
             // 被exceptionHandler处理过了，直接返回

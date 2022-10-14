@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.annotation.Version;
 import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,7 @@ import lombok.Setter;
  * @author 沈金勇 438217638@qq.com
  * @since 2022-10-14 11:43:29
  */
+@Data
 @Getter
 @Setter
 @TableName("server_user")
