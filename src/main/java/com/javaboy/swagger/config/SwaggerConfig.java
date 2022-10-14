@@ -19,7 +19,20 @@ public class SwaggerConfig {
     public GroupedOpenApi swagger(){
         String[] paths = { "/swagger/**" };
         String[] packagedToMatch = { "com.javaboy.swagger.controller" };
-        return GroupedOpenApi.builder().group("Swagger模块")
+        return GroupedOpenApi.builder().group("接口文档")
+                .pathsToMatch(paths)
+                // 请求头包含授权码
+                // .addOperationCustomizer((operation, handlerMethod) -> {
+                //    return operation.addParametersItem(new HeaderParameter().name("Authorization").example("Authorization").description("授权码").schema(new StringSchema()._default("Authorization").name("请求头").description("授权码")));
+                // })
+                .packagesToScan(packagedToMatch).build();
+    }
+
+    @Bean
+    public GroupedOpenApi system(){
+        String[] paths = { "/system/**" };
+        String[] packagedToMatch = { "com.javaboy.system.controller" };
+        return GroupedOpenApi.builder().group("系统管理")
                 .pathsToMatch(paths)
                 // 请求头包含授权码
                 // .addOperationCustomizer((operation, handlerMethod) -> {
