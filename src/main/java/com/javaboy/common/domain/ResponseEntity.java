@@ -3,12 +3,14 @@ package com.javaboy.common.domain;
 import com.javaboy.common.enums.AppCode;
 import com.javaboy.common.exception.ServiceException;
 import io.swagger.annotations.ApiModel;
+import lombok.Data;
 
 /**
  * @author ：沈金勇 438217638@qq.com
  * @description：响应实体类
  * @date ：2022/10/14 13:49
  */
+@Data
 @ApiModel(description = "响应实体类")
 public class ResponseEntity<T> {
 
