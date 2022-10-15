@@ -45,7 +45,17 @@ public class ServerUserController {
             subject.login(customToken);
         } catch (AuthenticationException e){
             customToken.clear();
-            // 用户名或密码错误
+            /**
+             * 身份验证失败类型
+             * AuthenticationException
+             *  子类：
+             *  DisabledAccountException（禁用的帐号）
+             *  LockedAccountException（锁定的帐号）
+             *  UnknownAccountException（错误的帐号）
+             *  ExcessiveAttemptsException（登录失败次数过多）
+             *  IncorrectCredentialsException （错误的凭证）
+             *  ExpiredCredentialsException（过期的凭证）
+             * */
             return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
         }
         // 获取返回结果

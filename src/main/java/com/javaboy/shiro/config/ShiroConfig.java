@@ -2,6 +2,7 @@ package com.javaboy.shiro.config;
 
 import com.javaboy.shiro.domain.MyRetryLimitCredentialsMatcher;
 import com.javaboy.shiro.domain.UserRealm;
+import com.javaboy.shiro.filter.JwtFilter;
 import com.javaboy.shiro.filter.MyAuthorizationFilter;
 import com.javaboy.shiro.filter.MyLoginFilter;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -59,7 +60,7 @@ public class ShiroConfig {
          * authc:必须认证了才能访问
          * user:必须拥有记住我功能才能用
          * perms:拥有对某个资源的权限才能访问
-         * role:拥有某个角色权限才能访问
+         * roles:拥有某个角色权限才能访问
          * */
         // 使用Shiro的内置过滤器
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
@@ -73,12 +74,14 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/system/serverUser/queryAll","anon");
         filterChainDefinitionMap.put("/system/serverUser/loginOut","authc");
         filterChainDefinitionMap.put("/system/serverUser/queryOne","authc");
+        filterChainDefinitionMap.put("/system/serverUser/add","perms[user:add]");
+        filterChainDefinitionMap.put("/system/serverUser/ad","roles[admin]");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         // 使用自定义的过滤器
         LinkedHashMap<String, Filter> filters = new LinkedHashMap<>();
         // 未登录 shiroFilterFactoryBean.setLoginUrl("/toLogin");
-        filters.put("authc", new MyLoginFilter());
+        filters.put("authc", new JwtFilter());// filters.put("authc", new MyLoginFilter());
         // 未授权 shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
         filters.put("perms", new MyAuthorizationFilter());
         shiroFilterFactoryBean.setFilters(filters);

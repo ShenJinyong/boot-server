@@ -28,17 +28,17 @@ public class UserRealm extends AuthorizingRealm {
     @Resource
     private ServerUserService serverUserService;
 
-    // 获取自定义域名称
+    // 返回一个唯一的Realm名字
     @Override
     public String getName() {
         return "UserRealm";
     }
 
-    // 判断shiro支持的token类型
+    // 判断此Realm是否支持此Token
     @Override
     public boolean supports(AuthenticationToken authenticationToken) {
-        // 指定当前 authenticationToken 需要为 CustomToken 的实例
-        return authenticationToken instanceof CustomToken;
+        // 指定当前 authenticationToken 需要为 CustomToken 的实例 或者 JwtToken 的实例
+        return authenticationToken instanceof CustomToken || authenticationToken instanceof JwtToken;
 
     }
 
@@ -57,7 +57,7 @@ public class UserRealm extends AuthorizingRealm {
         return simpleAuthorizationInfo;
     }
 
-    // 认证
+    // 根据Token获取认证信息
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info("执行了认证=>AuthenticationInfo");
@@ -67,6 +67,8 @@ public class UserRealm extends AuthorizingRealm {
                 // 自定义客户端登录类型处理
                 CustomToken customToken = (CustomToken) authenticationToken;
                 username = customToken.getUsername();
+            }else if(authenticationToken instanceof JwtToken){
+                // Jwt Token登录类型处理
             }
         } catch (Exception e){
             throw new AuthenticationException();
@@ -83,6 +85,7 @@ public class UserRealm extends AuthorizingRealm {
         Session session = currentSubject.getSession();
         // 设置会话session
         session.setAttribute("user",serverUser);
+        // 如果身份认证验证成功，返回一个AuthenticationInfo实现
         return simpleAuthenticationInfo;
 
     }
