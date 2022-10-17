@@ -4,33 +4,71 @@ package com.javaboy.system.controller;
 import com.javaboy.common.domain.ResponseEntity;
 import com.javaboy.common.enums.AppCode;
 import com.javaboy.shiro.domain.CustomToken;
+import com.javaboy.shiro.util.EncryptUtil;
 import com.javaboy.system.entity.ServerUser;
-import com.javaboy.system.util.EncryptUtil;
+import com.javaboy.system.service.ServerUserService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * <p>
  * 用户表 前端控制器
  * </p>
  *
- * @author 沈金勇 438217638@qq.com
- * @since 2022-10-14 11:43:29
+ * @author 沈金勇438217638@qq.com
+ * @since 2022-10-17 04:42:44
  */
 @RestController
 @RequestMapping("/system/serverUser")
 public class ServerUserController {
 
+    @Resource
+    private ServerUserService serverUserService;
+
     @PostMapping("/register")
-    public String register(@RequestParam(value = "username")String username,
-                           @RequestParam(value = "password")String password) {
-        ServerUser serverUser = new ServerUser();
-        serverUser.setUsername(username);
-        serverUser.setPassword(EncryptUtil.encrypt(password));
-        return "注册用户成功";
+    public ResponseEntity register(@RequestParam(value = "username")String username,
+                                   @RequestParam(value = "password")String password) {
+        ServerUser serverUser = serverUserService.findByUsername(username);
+        if(serverUser != null){
+            return ResponseEntity.fail(AppCode.USERNAME_IS_EXISTS);
+        }else{
+            ServerUser user = new ServerUser();
+            user.setUsername(username);
+            user.setPassword(EncryptUtil.encrypt(password));
+            int flag = serverUserService.createUser(user);
+            if(flag == 1){
+                return ResponseEntity.ok();
+            }else{
+                return ResponseEntity.fail(AppCode.INSERT_USER_EXCEPTION);
+            }
+        }
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity changePassword(@RequestParam(value = "user_id")String userId,
+                                   @RequestParam(value = "password")String password) {
+        ServerUser serverUser = serverUserService.getById(userId);
+        if(serverUser == null){
+            return ResponseEntity.fail(AppCode.NOT_FOUND_USER_BY_ID);
+        }else{
+            String newPassword = EncryptUtil.encrypt(password);
+            if(newPassword.equals(serverUser.getPassword())){
+                return ResponseEntity.fail(AppCode.NEW_PASSWORD_SAME_AS_OLD_PASSWORD);
+            }else{
+                serverUser.setPassword(newPassword);
+                boolean flag = serverUserService.updateById(serverUser);
+                if(flag){
+                    return ResponseEntity.ok();
+                }else{
+                    return ResponseEntity.fail(AppCode.CHANGE_PASSWORD_EXCEPTION);
+                }
+            }
+        }
     }
 
     @GetMapping("/login")
@@ -43,19 +81,16 @@ public class ServerUserController {
         try {
             // 执行登录方法，如果没有异常就说明OK
             subject.login(customToken);
+        }catch (UnknownAccountException unknownAccountException){
+            return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
+        }catch (LockedAccountException lockedAccountException){
+            return ResponseEntity.fail(AppCode.LOCKED_ACCOUNT_EXCEPTION);
+        }catch (IncorrectCredentialsException incorrectCredentialsException){
+            return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
+        }catch (ExcessiveAttemptsException excessiveAttemptsException){
+            return ResponseEntity.fail(AppCode.EXCESSIVE_ATTEMPTS_EXCEPTION);
         } catch (AuthenticationException e){
             customToken.clear();
-            /**
-             * 身份验证失败类型
-             * AuthenticationException
-             *  子类：
-             *  DisabledAccountException（禁用的帐号）
-             *  LockedAccountException（锁定的帐号）
-             *  UnknownAccountException（错误的帐号）
-             *  ExcessiveAttemptsException（登录失败次数过多）
-             *  IncorrectCredentialsException （错误的凭证）
-             *  ExpiredCredentialsException（过期的凭证）
-             * */
             return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
         }
         // 获取返回结果
@@ -71,28 +106,21 @@ public class ServerUserController {
         try {
             // 执行登录方法，如果没有异常就说明OK
             subject.login(customToken);
+        }catch (UnknownAccountException unknownAccountException){
+            return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
+        }catch (LockedAccountException lockedAccountException){
+            return ResponseEntity.fail(AppCode.LOCKED_ACCOUNT_EXCEPTION);
+        }catch (IncorrectCredentialsException incorrectCredentialsException){
+            return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
+        }catch (ExcessiveAttemptsException excessiveAttemptsException){
+            return ResponseEntity.fail(AppCode.EXCESSIVE_ATTEMPTS_EXCEPTION);
         } catch (AuthenticationException e){
             customToken.clear();
-            // 用户名或密码错误
             return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
         }
         // 获取返回结果
         ServerUser serverUser = (ServerUser) subject.getSession().getAttribute("user");
         return ResponseEntity.ok(serverUser);
     }
-
-
-    @GetMapping("/queryOne")
-    @ApiOperation("查询用户")
-    public String queryOne() {
-        return "查询用户";
-    }
-
-    @GetMapping("/queryAll")
-    @ApiOperation("查询所有用户")
-    public String queryAll() {
-        return "查询所有用户";
-    }
-
 }
 

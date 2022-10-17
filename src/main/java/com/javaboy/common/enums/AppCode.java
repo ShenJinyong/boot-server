@@ -17,15 +17,13 @@ public enum AppCode implements SystemStatus{
     UN_LOGIN(4006,"未登录"),
     UN_AUTHORIZED(4007,"未授权"),
     USERNAME_OR_PASSWORD_ERROR(4008,"用户名或者密码错误"),
-    NO_PASSWORD_TIMESTAMP_ERROR(4009,"免密时间戳错误"),
-    NO_PASSWORD_SIGNATURE_ERROR(4009,"免密签名错误"),
-    UN_KNOWN_ACCOUNT_EXCEPTION(4010,"用户名不存在异常"),
-    REPEAT_KNOWN_ACCOUNT_EXCEPTION(4011,"用户名不唯一"),
-    USERNAME_IS_EXISTS(4012,"用户名已存在"),
-    INSERT_USER_EXCEPTION(4013,"创建用户异常"),
-    NOT_FOUND_USER_BY_ID(4014,"根本id找不到用户"),
-    NEW_PASSWORD_SAME_AS_OLD_PASSWORD(4015,"新密码与旧密码相同"),
-    CHANGE_PASSWORD_EXCEPTION(4015,"修改密码失败"),
+    USERNAME_IS_EXISTS(4009,"用户名已存在"),
+    INSERT_USER_EXCEPTION(4010,"创建用户异常"),
+    NOT_FOUND_USER_BY_ID(4011,"根据id找不到用户"),
+    NEW_PASSWORD_SAME_AS_OLD_PASSWORD(4012,"新密码与旧密码相同"),
+    CHANGE_PASSWORD_EXCEPTION(4013,"修改密码失败"),
+    LOCKED_ACCOUNT_EXCEPTION(4014,"账号被锁定或者被删除"),
+    EXCESSIVE_ATTEMPTS_EXCEPTION(4015,"密码重试次数异常"),
     APP_ERROR(400, "业务异常");
 
     private int code;

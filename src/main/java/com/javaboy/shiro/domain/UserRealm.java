@@ -80,10 +80,11 @@ public class UserRealm extends AuthorizingRealm {
         if(serverUser == null){
             // 没找到帐号
             throw new UnknownAccountException();
-        }
-        if(serverUser.getDeleted() == 1 || serverUser.getLocked() == 1){
-            // 账号被删除或者锁定
-            throw new LockedAccountException();
+        }else{
+            if(serverUser.getDeleted() == 1 || serverUser.getLocked() == 1){
+                // 账号被删除或者锁定
+                throw new LockedAccountException();
+            }
         }
         // 密码认证，shiro做~
         String password = serverUser.getPassword();
