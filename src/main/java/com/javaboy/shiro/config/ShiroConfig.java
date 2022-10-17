@@ -2,7 +2,6 @@ package com.javaboy.shiro.config;
 
 import com.javaboy.shiro.domain.MyRetryLimitCredentialsMatcher;
 import com.javaboy.shiro.domain.UserRealm;
-import com.javaboy.shiro.filter.JwtFilter;
 import com.javaboy.shiro.filter.MyAuthorizationFilter;
 import com.javaboy.shiro.filter.MyLoginFilter;
 import org.apache.shiro.cache.ehcache.EhCacheManager;

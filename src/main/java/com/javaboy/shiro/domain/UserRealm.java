@@ -4,10 +4,7 @@ import com.javaboy.system.entity.ServerUser;
 import com.javaboy.system.service.ServerUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -16,6 +13,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 import javax.annotation.Resource;
+import java.util.Set;
 
 /**
  * @author ：沈金勇 438217638@qq.com
@@ -50,9 +48,14 @@ public class UserRealm extends AuthorizingRealm {
         // 获取当前的用户
         ServerUser currentUser = (ServerUser)principalCollection.getPrimaryPrincipal();
         // 获取用户角色集
-        simpleAuthorizationInfo.addRole("admin");
+        Set<String> roles = serverUserService.findRoles(currentUser.getUsername());
+        // 设置用户角色集
+        simpleAuthorizationInfo.addRoles(roles);
         // 获取用户权限集
-        simpleAuthorizationInfo.addStringPermission("user:add");
+        Set<String> permissions = serverUserService.findPermissions(currentUser.getUsername());
+        // 设置用户权限集
+        simpleAuthorizationInfo.addStringPermissions(permissions);
+        // 如果身份认证授权成功，返回一个AuthenticationInfo实现
         return simpleAuthorizationInfo;
     }
 
@@ -73,7 +76,15 @@ public class UserRealm extends AuthorizingRealm {
             throw new AuthenticationException();
         }
         // 查询用户
-        ServerUser serverUser = serverUserService.queryServerUserByUserName(username);
+        ServerUser serverUser = serverUserService.findByUsername(username);
+        if(serverUser == null){
+            // 没找到帐号
+            throw new UnknownAccountException();
+        }
+        if(serverUser.getDeleted() == 1 || serverUser.getLocked() == 1){
+            // 账号被删除或者锁定
+            throw new LockedAccountException();
+        }
         // 密码认证，shiro做~
         String password = serverUser.getPassword();
         // 使用SimpleAuthenticationInfo实例认证
@@ -86,7 +97,6 @@ public class UserRealm extends AuthorizingRealm {
         session.setAttribute("user",serverUser);
         // 如果身份认证验证成功，返回一个AuthenticationInfo实现
         return simpleAuthenticationInfo;
-
     }
 
 }

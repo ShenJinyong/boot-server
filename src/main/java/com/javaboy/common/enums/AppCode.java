@@ -21,6 +21,11 @@ public enum AppCode implements SystemStatus{
     NO_PASSWORD_SIGNATURE_ERROR(4009,"免密签名错误"),
     UN_KNOWN_ACCOUNT_EXCEPTION(4010,"用户名不存在异常"),
     REPEAT_KNOWN_ACCOUNT_EXCEPTION(4011,"用户名不唯一"),
+    USERNAME_IS_EXISTS(4012,"用户名已存在"),
+    INSERT_USER_EXCEPTION(4013,"创建用户异常"),
+    NOT_FOUND_USER_BY_ID(4014,"根本id找不到用户"),
+    NEW_PASSWORD_SAME_AS_OLD_PASSWORD(4015,"新密码与旧密码相同"),
+    CHANGE_PASSWORD_EXCEPTION(4015,"修改密码失败"),
     APP_ERROR(400, "业务异常");
 
     private int code;

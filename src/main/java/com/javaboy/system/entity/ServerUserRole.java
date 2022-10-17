@@ -2,7 +2,6 @@ package com.javaboy.system.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
@@ -17,8 +16,8 @@ import lombok.Setter;
  * 用户角色表
  * </p>
  *
- * @author 沈金勇 438217638@qq.com
- * @since 2022-10-14 11:43:29
+ * @author 沈金勇438217638@qq.com
+ * @since 2022-10-17 04:42:44
  */
 @Getter
 @Setter
@@ -26,16 +25,12 @@ import lombok.Setter;
 @ApiModel(value = "ServerUserRole对象", description = "用户角色表")
 public class ServerUserRole {
 
-    @ApiModelProperty("主键")
-      @TableId("id")
-    private String id;
-
     @ApiModelProperty("修改时间")
-      @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
 
     @ApiModelProperty("创建时间")
-      @TableField(value = "gmt_create", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private Date gmtCreate;
 
     @ApiModelProperty("逻辑删除")

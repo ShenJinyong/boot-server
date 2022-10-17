@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.annotation.Version;
 import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,10 +17,9 @@ import lombok.Setter;
  * 用户表
  * </p>
  *
- * @author 沈金勇 438217638@qq.com
- * @since 2022-10-14 11:43:29
+ * @author 沈金勇438217638@qq.com
+ * @since 2022-10-17 04:42:44
  */
-@Data
 @Getter
 @Setter
 @TableName("server_user")
@@ -29,15 +27,15 @@ import lombok.Setter;
 public class ServerUser {
 
     @ApiModelProperty("主键")
-      @TableId("id")
+    @TableId("id")
     private String id;
 
     @ApiModelProperty("修改时间")
-      @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
 
     @ApiModelProperty("创建时间")
-      @TableField(value = "gmt_create", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private Date gmtCreate;
 
     @ApiModelProperty("逻辑删除")
@@ -95,8 +93,12 @@ public class ServerUser {
     private String loginCount;
 
     @ApiModelProperty("所属组织id")
-    @TableField("dept_id")
-    private String deptId;
+    @TableField("department_id")
+    private String departmentId;
+
+    @ApiModelProperty("是否锁定")
+    @TableField("locked")
+    private Integer locked;
 
 
 }

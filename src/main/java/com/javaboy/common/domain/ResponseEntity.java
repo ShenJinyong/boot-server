@@ -35,7 +35,14 @@ public class ResponseEntity<T> {
     }
 
     /**
-     * 成功返回
+     * 成功返回-无数据
+     */
+    public static <T> ResponseEntity<T> ok() {
+        return new ResponseEntity<>(Boolean.TRUE, null, AppCode.APP_SUCCESS);
+    }
+
+    /**
+     * 成功返回-有数据
      */
     public static <T> ResponseEntity<T> ok(T data) {
         return new ResponseEntity<>(Boolean.TRUE, data, AppCode.APP_SUCCESS);

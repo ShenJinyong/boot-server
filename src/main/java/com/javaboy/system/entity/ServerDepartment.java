@@ -17,25 +17,25 @@ import lombok.Setter;
  * 部门表
  * </p>
  *
- * @author 沈金勇 438217638@qq.com
- * @since 2022-10-14 11:43:29
+ * @author 沈金勇438217638@qq.com
+ * @since 2022-10-17 04:42:43
  */
 @Getter
 @Setter
-@TableName("server_dept")
-@ApiModel(value = "ServerDept对象", description = "部门表")
-public class ServerDept {
+@TableName("server_department")
+@ApiModel(value = "ServerDepartment对象", description = "部门表")
+public class ServerDepartment {
 
     @ApiModelProperty("主键id")
-      @TableId("id")
+    @TableId("id")
     private String id;
 
     @ApiModelProperty("创建时间")
-      @TableField(value = "gmt_create", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private Date gmtCreate;
 
     @ApiModelProperty("修改时间")
-      @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
 
     @ApiModelProperty("版本号")

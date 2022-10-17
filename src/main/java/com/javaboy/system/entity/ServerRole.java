@@ -17,8 +17,8 @@ import lombok.Setter;
  * 角色表
  * </p>
  *
- * @author 沈金勇 438217638@qq.com
- * @since 2022-10-14 11:43:29
+ * @author 沈金勇438217638@qq.com
+ * @since 2022-10-17 04:42:44
  */
 @Getter
 @Setter
@@ -27,15 +27,15 @@ import lombok.Setter;
 public class ServerRole {
 
     @ApiModelProperty("主键")
-      @TableId("id")
+    @TableId("id")
     private String id;
 
     @ApiModelProperty("修改时间")
-      @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private Date gmtModified;
 
     @ApiModelProperty("创建时间")
-      @TableField(value = "gmt_create", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private Date gmtCreate;
 
     @ApiModelProperty("逻辑删除")
@@ -52,13 +52,13 @@ public class ServerRole {
     @TableField("name")
     private String name;
 
-    @ApiModelProperty("角色权限字符")
-    @TableField("key")
-    private String key;
-
     @ApiModelProperty("角色描述")
     @TableField("description")
     private String description;
+
+    @ApiModelProperty("是否可用")
+    @TableField("available")
+    private Integer available;
 
 
 }

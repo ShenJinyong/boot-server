@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
  * 用户角色表 服务实现类
  * </p>
  *
- * @author 沈金勇 438217638@qq.com
- * @since 2022-10-14 11:43:29
+ * @author 沈金勇438217638@qq.com
+ * @since 2022-10-17 04:42:44
  */
 @Service
 public class ServerUserRoleServiceImpl extends ServiceImpl<ServerUserRoleMapper, ServerUserRole> implements ServerUserRoleService {

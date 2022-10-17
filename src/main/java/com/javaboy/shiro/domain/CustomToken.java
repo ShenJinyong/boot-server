@@ -1,7 +1,7 @@
 package com.javaboy.shiro.domain;
 
 import com.javaboy.shiro.enums.LoginType;
-import com.javaboy.system.util.EncryptUtil;
+import com.javaboy.shiro.util.EncryptUtil;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**

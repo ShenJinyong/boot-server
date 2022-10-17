@@ -1,4 +1,4 @@
-package com.javaboy.system.util;
+package com.javaboy.shiro.util;
 
 import org.springframework.util.DigestUtils;
 
