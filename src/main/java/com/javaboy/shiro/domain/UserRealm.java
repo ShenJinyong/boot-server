@@ -39,7 +39,6 @@ public class UserRealm extends AuthorizingRealm {
     public boolean supports(AuthenticationToken authenticationToken) {
         // 指定当前 authenticationToken 需要为 CustomToken 的实例 或者 JwtToken 的实例
         return authenticationToken instanceof CustomToken || authenticationToken instanceof JwtToken;
-
     }
 
     // 授权
