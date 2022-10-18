@@ -16,19 +16,12 @@ import java.io.PrintWriter;
 
 /**
  * @author ：沈金勇 438217638@qq.com
- * @description： Jwt登录过滤器
+ * @description： Basic HTTP 身份验证拦截器
  * @date ：2022/10/15 15:07
  */
-public class JwtFilter extends BasicHttpAuthenticationFilter {
+public class MyBasicHttpAuthenticationFilter extends BasicHttpAuthenticationFilter {
 
-    protected static final String AUTHORIZATION_HEADER = "Authorization";
     private String token;
-
-    @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
-        this.getSubject(request, response).login(new JwtToken(this.token));
-        return true;
-    }
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
@@ -40,9 +33,20 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 return false;
             }
         }
-
         Subject subject = getSubject(request, response);
         return subject.getPrincipals() != null;
+    }
+
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+        HttpServletResponse res = (HttpServletResponse) response;
+        res.setStatus(HttpServletResponse.SC_OK);
+        res.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+        PrintWriter writer = res.getWriter();
+        writer.append(JSONUtil.toJsonStr(ResponseEntity.fail(AppCode.UN_LOGIN)));
+        writer.close();
+        return false;
     }
 
     @Override
@@ -57,15 +61,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     }
 
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        HttpServletResponse res = (HttpServletResponse) response;
-        res.setStatus(HttpServletResponse.SC_OK);
-        res.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json;charset=UTF-8");
-        PrintWriter writer = res.getWriter();
-        writer.append(JSONUtil.toJsonStr(ResponseEntity.fail(AppCode.UN_LOGIN)));
-        writer.close();
-        return false;
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) {
+        this.getSubject(request, response).login(new JwtToken(this.token));
+        return true;
     }
 
 }

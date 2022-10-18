@@ -16,11 +16,11 @@ import java.io.PrintWriter;
  * @description：权限过滤器
  * @date ：2022/10/14 15:26
  */
-public class MyAuthorizationFilter extends PermissionsAuthorizationFilter {
+public class MyPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
 
     @Override
-    public boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws IOException {
-        return super.isAccessAllowed(servletRequest, servletResponse, o);
+    public boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object mappedValue) throws IOException {
+        return super.isAccessAllowed(servletRequest, servletResponse, mappedValue);
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.io.PrintWriter;
  * @description：登录过滤器
  * @date ：2022/10/14 15:19
  */
-public class MyLoginFilter extends AuthenticationFilter {
+public class MyAuthenticationFilter extends AuthenticationFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) {

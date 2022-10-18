@@ -122,5 +122,11 @@ public class ServerUserController {
         ServerUser serverUser = (ServerUser) subject.getSession().getAttribute("user");
         return ResponseEntity.ok(serverUser);
     }
+
+    @GetMapping("/query")
+    @ApiOperation("查询")
+    public ResponseEntity query() {
+        return ResponseEntity.ok();
+    }
 }
 

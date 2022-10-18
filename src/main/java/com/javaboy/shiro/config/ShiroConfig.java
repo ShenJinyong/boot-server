@@ -2,8 +2,9 @@ package com.javaboy.shiro.config;
 
 import com.javaboy.shiro.domain.MyRetryLimitCredentialsMatcher;
 import com.javaboy.shiro.domain.UserRealm;
-import com.javaboy.shiro.filter.MyAuthorizationFilter;
-import com.javaboy.shiro.filter.MyLoginFilter;
+import com.javaboy.shiro.filter.MyBasicHttpAuthenticationFilter;
+import com.javaboy.shiro.filter.MyPermissionsAuthorizationFilter;
+import com.javaboy.shiro.filter.MyAuthenticationFilter;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -84,7 +85,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/system/serverUser/loginSignature","anon");
         filterChainDefinitionMap.put("/system/serverUser/queryAll","anon");
         filterChainDefinitionMap.put("/system/serverUser/loginOut","authc");
-        filterChainDefinitionMap.put("/system/serverUser/queryOne","authc");
+        filterChainDefinitionMap.put("/system/serverUser/changePassword","authc");
+        filterChainDefinitionMap.put("/system/serverUser/query","authc");
         filterChainDefinitionMap.put("/system/serverUser/add","perms[user:add]");
         filterChainDefinitionMap.put("/system/serverUser/ad","roles[admin]");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
@@ -92,10 +94,11 @@ public class ShiroConfig {
         // 使用自定义的过滤器
         LinkedHashMap<String, Filter> filters = new LinkedHashMap<>();
         // 未登录 shiroFilterFactoryBean.setLoginUrl("/toLogin");
-        // filters.put("authc", new JwtFilter());
-        filters.put("authc", new MyLoginFilter());
+        filters.put("authc", new MyAuthenticationFilter());
         // 未授权 shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
-        filters.put("perms", new MyAuthorizationFilter());
+        filters.put("perms", new MyPermissionsAuthorizationFilter());
+        // Basic HTTP 身份验证拦截器
+        filters.put("authcBasic",new MyBasicHttpAuthenticationFilter());
         shiroFilterFactoryBean.setFilters(filters);
 
         return shiroFilterFactoryBean;
