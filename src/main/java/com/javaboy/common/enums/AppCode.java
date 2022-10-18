@@ -24,6 +24,7 @@ public enum AppCode implements SystemStatus{
     CHANGE_PASSWORD_EXCEPTION(4013,"修改密码失败"),
     LOCKED_ACCOUNT_EXCEPTION(4014,"账号被锁定或者被删除"),
     EXCESSIVE_ATTEMPTS_EXCEPTION(4015,"密码重试次数异常"),
+    INVALID_SESSION_EXCEPTION(4016,"用户会话已过期"),
     APP_ERROR(400, "业务异常");
 
     private int code;

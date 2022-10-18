@@ -5,6 +5,7 @@ import com.javaboy.common.enums.AppCode;
 import com.javaboy.common.exception.ServiceException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.session.InvalidSessionException;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -123,6 +124,16 @@ public class ResponseAdvice implements ResponseBodyAdvice {
     private ResponseEntity noHandlerFoundException(NoHandlerFoundException exception) {
         logErrorRequest(exception);
         return ResponseEntity.fail(AppCode.UN_SUPPORTED_METHOD);
+    }
+
+    /**
+     * 业务异常
+     */
+    @ExceptionHandler(InvalidSessionException.class)
+    @ResponseBody
+    private ResponseEntity invalidSessionException(InvalidSessionException invalidSessionException) {
+        logErrorRequest(invalidSessionException);
+        return ResponseEntity.fail(AppCode.INVALID_SESSION_EXCEPTION);
     }
 
     /**
