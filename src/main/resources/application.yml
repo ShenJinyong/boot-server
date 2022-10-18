@@ -4,6 +4,16 @@ spring:
   application:
     # 名称
     name: ServerBoot
+  # mvc
+  mvc:
+    # 404抛出异常
+    throw-exception-if-no-handler-found: true
+  # web
+  web:
+    # 资源
+    resources:
+      # 映射
+      add-mappings: false
   # 数据源
   datasource:
     # url
@@ -48,3 +58,4 @@ mybatis-plus:
 server:
   # 端口
   port:8080
+
