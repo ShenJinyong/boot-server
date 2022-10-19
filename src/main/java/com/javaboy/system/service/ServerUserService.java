@@ -16,8 +16,6 @@ import java.util.Set;
 public interface ServerUserService extends IService<ServerUser> {
     // 创建账户
     int createUser(ServerUser user);
-    // 修改密码
-    void changePassword(Long userId, String newPassword);
     // 添加用户-角色关系
     void correlationRoles(Long userId, Long... roleIds);
     // 移除用户-角色关系

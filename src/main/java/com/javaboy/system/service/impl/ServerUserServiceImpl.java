@@ -30,11 +30,6 @@ public class ServerUserServiceImpl extends ServiceImpl<ServerUserMapper, ServerU
     }
 
     @Override
-    public void changePassword(Long userId, String newPassword) {
-
-    }
-
-    @Override
     public void correlationRoles(Long userId, Long... roleIds) {
 
     }
