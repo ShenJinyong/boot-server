@@ -57,5 +57,15 @@ mybatis-plus:
 # 服务
 server:
   # 端口
-  port:8080
+  port: 9050
+  # ssl证书
+  ssl:
+    # 证书路径
+    key-store: classpath:codvision.jks
+    # 密钥密码
+    key-password: Codvision@2020
+    # 密钥库密码
+    key-store-password: Codvision@2020
+    # 证书别名
+    key-alias: codvision
 

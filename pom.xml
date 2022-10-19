@@ -106,6 +106,27 @@
     </dependencyManagement>
 
     <build>
+        <!--将自定义目录的jar包一起打包-->
+        <resources>
+            <resource>
+                <!--自定义jar包在项目中的目录-->
+                <directory>lib</directory>
+                <!--打包目标存放路径-->
+                <targetPath>BOOT-INF/lib</targetPath>
+                <includes>
+                    <!--筛选文件类型-->
+                    <include>**/*.jar</include>
+                </includes>
+            </resource>
+            <!-- 保证所有的resources下的配置文件能被编译打包，即能够被复制到classpath目录下 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
