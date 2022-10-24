@@ -30,7 +30,10 @@ public enum AppCode implements SystemStatus{
     CHANGE_ROLE_EXCEPTION(4019,"修改角色失败"),
     DELETE_ROLE_EXCEPTION(4020,"删除角色失败"),
     CHANGE_PERMISSION_EXCEPTION(4021,"修改权限失败"),
-    DELETE_PERMISSION_EXCEPTION(4022,"删除权限失败");
+    DELETE_PERMISSION_EXCEPTION(4022,"删除权限失败"),
+    CHANGE_DEPARTMENT_EXCEPTION(4023,"修改部门失败"),
+    DELETE_DEPARTMENT_EXCEPTION(4024,"删除部门失败");
+
 
     private int code;
     private String message;
