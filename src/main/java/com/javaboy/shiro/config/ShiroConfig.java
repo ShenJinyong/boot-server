@@ -6,6 +6,8 @@ import com.javaboy.shiro.filter.MyBasicHttpAuthenticationFilter;
 import com.javaboy.shiro.filter.MyPermissionsAuthorizationFilter;
 import com.javaboy.shiro.filter.MyAuthenticationFilter;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,6 +59,12 @@ public class ShiroConfig {
         securityManager.setRealm(userRealm(matcher));
         // 给安全管理器设置缓存管理器对象
         securityManager.setCacheManager(getEhCacheManager());
+        // 关闭shiro自带的session
+        DefaultSubjectDAO defaultSubjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        defaultSubjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        securityManager.setSubjectDAO(defaultSubjectDAO);
         return securityManager;
     }
 

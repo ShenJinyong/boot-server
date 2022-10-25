@@ -2,6 +2,7 @@ package com.javaboy.shiro.domain;
 
 import com.javaboy.shiro.enums.LoginType;
 import com.javaboy.shiro.util.EncryptUtil;
+import lombok.Data;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**
@@ -9,6 +10,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
  * @description：客户端登录
  * @date ：2022/10/14 14:40
  */
+@Data
 public class CustomToken extends UsernamePasswordToken {
 
     private static final long serialVersionUID = -2564928913725078138L;

@@ -5,6 +5,7 @@ import com.javaboy.common.domain.ResponseEntity;
 import com.javaboy.common.enums.AppCode;
 import com.javaboy.shiro.domain.CustomToken;
 import com.javaboy.shiro.util.EncryptUtil;
+import com.javaboy.shiro.util.JwtUtil;
 import com.javaboy.system.entity.ServerUser;
 import com.javaboy.system.service.ServerUserService;
 import io.swagger.annotations.ApiOperation;
@@ -92,7 +93,7 @@ public class ServerUserController {
 
     @GetMapping("/login")
     @Operation(summary = "登录")
-    public ResponseEntity<ServerUser> login(@RequestParam(value = "username")String username,
+    public ResponseEntity<String> login(@RequestParam(value = "username")String username,
                                             @RequestParam(value = "password")String password){
         // 获取当前的用户
         Subject subject = SecurityUtils.getSubject();
@@ -114,13 +115,13 @@ public class ServerUserController {
             return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
         }
         // 获取返回结果
-        ServerUser serverUser = (ServerUser) subject.getSession().getAttribute("user");
-        return ResponseEntity.ok(serverUser);
+        String sign = JwtUtil.sign(username,EncryptUtil.encrypt(password));
+        return ResponseEntity.ok(sign);
     }
 
     @GetMapping("/loginSignature")
     @Operation(summary = "免密登录")
-    public ResponseEntity<ServerUser> loginSignature(@RequestParam(value = "username")String username) {
+    public ResponseEntity<String> loginSignature(@RequestParam(value = "username")String username) {
         Subject subject = SecurityUtils.getSubject();
         CustomToken customToken = new CustomToken(username);
         try {
@@ -139,8 +140,8 @@ public class ServerUserController {
             return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
         }
         // 获取返回结果
-        ServerUser serverUser = (ServerUser) subject.getSession().getAttribute("user");
-        return ResponseEntity.ok(serverUser);
+        String sign = JwtUtil.sign(username);
+        return ResponseEntity.ok(sign);
     }
 
     @GetMapping("/loginOut")

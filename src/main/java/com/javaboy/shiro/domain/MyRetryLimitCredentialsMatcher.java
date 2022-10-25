@@ -1,7 +1,10 @@
 package com.javaboy.shiro.domain;
 
 import com.javaboy.shiro.enums.LoginType;
+import com.javaboy.shiro.util.EncryptUtil;
+import com.javaboy.shiro.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -40,11 +43,12 @@ public class MyRetryLimitCredentialsMatcher extends SimpleCredentialsMatcher {
     }
 
 
-    // 匹配用户输入的token的凭证（未加密）与系统提供的凭证（已加密）
+    // 匹配用户输入的token的凭证（未加密）与系统提供的凭证（已加密）super.doCredentialsMatch(authcToken, info)
     @Override
     public boolean doCredentialsMatch(AuthenticationToken authcToken, AuthenticationInfo info) {
         // 获取用户名
-        String username = (String) authcToken.getPrincipal();
+        String token = (String) authcToken.getPrincipal();
+        String username = JwtUtil.getUsername(token);
         // retry count + 1
         AtomicInteger retryCount = passwordRetryCache.get(username);
         if(retryCount == null) {
@@ -59,22 +63,27 @@ public class MyRetryLimitCredentialsMatcher extends SimpleCredentialsMatcher {
         }
         // 并将其保存到缓存中
         passwordRetryCache.put(username, retryCount);
+
+        boolean doCredentialsMatch = Boolean.FALSE;
         // 处理客户端Token
         if (authcToken instanceof CustomToken) {
             CustomToken customToken = (CustomToken) authcToken;
-            // 处理免密登录,放行
-            if (customToken.getLoginType().equals(LoginType.NO_PASSWORD)) {
+            if (customToken.getLoginType().equals(LoginType.PASSWORD)) {
+                String password = info.getCredentials().toString();
+                System.out.println(password);
+                doCredentialsMatch = super.doCredentialsMatch(authcToken, info);
+                if(doCredentialsMatch){
+                    // clear retry count
+                    passwordRetryCache.remove(username);
+                }
+            } else if(customToken.getLoginType().equals(LoginType.NO_PASSWORD)){
                 // clear retry count
                 passwordRetryCache.remove(username);
                 return true;
             }
+        }else if(authcToken instanceof JwtToken){
+            return true;
         }
-        // 调用超类验证器，判断是否登录成功
-        boolean matches = super.doCredentialsMatch(authcToken, info);
-        if(matches) {
-            // clear retry count
-            passwordRetryCache.remove(username);
-        }
-        return matches;
+        return doCredentialsMatch;
     }
 }

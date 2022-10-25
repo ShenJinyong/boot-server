@@ -1,16 +1,16 @@
 package com.javaboy.shiro.domain;
 
+import com.javaboy.shiro.enums.LoginType;
+import com.javaboy.shiro.util.JwtUtil;
 import com.javaboy.system.entity.ServerUser;
 import com.javaboy.system.service.ServerUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 
 import javax.annotation.Resource;
 import java.util.Set;
@@ -63,18 +63,32 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         log.info("执行了认证=>AuthenticationInfo");
-        String username = null;
-        try{
-            if(authenticationToken instanceof CustomToken){
-                // 自定义客户端登录类型处理
-                CustomToken customToken = (CustomToken) authenticationToken;
-                username = customToken.getUsername();
-            }else if(authenticationToken instanceof JwtToken){
-                // Jwt Token登录类型处理
+        String token = "";
+        String username = "";
+        // 自定义客户端登录类型处理
+        if(authenticationToken instanceof CustomToken){
+            CustomToken customToken = (CustomToken) authenticationToken;
+            log.info("CustomToken:"+customToken);
+            username = customToken.getUsername();
+            log.info("username:"+username);
+            if(customToken.getLoginType().equals(LoginType.PASSWORD)){
+                // 账号密码登录处理
+                String password = String.valueOf(customToken.getPassword());
+                token = JwtUtil.sign(username,password);
+            }else {
+                // 免密登录处理
+                token = JwtUtil.sign(username);
             }
-        } catch (Exception e){
-            throw new AuthenticationException();
+            log.info("token:"+token);
+        }else if(authenticationToken instanceof JwtToken){
+            // Jwt Token登录类型处理
+            token = (String) authenticationToken.getPrincipal();
+            username = JwtUtil.getUsername(token);
+        }else {
+            // 未知登录类型处理
+            throw new UnsupportedTokenException();
         }
+
         // 查询用户
         ServerUser serverUser = serverUserService.findByUsername(username);
         if(serverUser == null){
@@ -89,13 +103,7 @@ public class UserRealm extends AuthorizingRealm {
         // 密码认证，shiro做~
         String password = serverUser.getPassword();
         // 使用SimpleAuthenticationInfo实例认证
-        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(serverUser, password, getName());
-        // 获取当前用户
-        Subject currentSubject = SecurityUtils.getSubject();
-        // 获取当前会话session
-        Session session = currentSubject.getSession();
-        // 设置会话session
-        session.setAttribute("user",serverUser);
+        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(token, password, getName());
         // 如果身份认证验证成功，返回一个AuthenticationInfo实现
         return simpleAuthenticationInfo;
     }

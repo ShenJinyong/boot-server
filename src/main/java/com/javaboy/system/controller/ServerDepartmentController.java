@@ -8,6 +8,7 @@ import com.javaboy.system.entity.ServerRole;
 import com.javaboy.system.service.ServerDepartmentService;
 import com.javaboy.system.service.ServerRoleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,6 +22,7 @@ import java.util.List;
  * @author 沈金勇438217638@qq.com
  * @since 2022-10-17 04:42:43
  */
+@Tag(name = "部门模块")
 @RestController
 @RequestMapping("/system/serverDepartment")
 public class ServerDepartmentController {
