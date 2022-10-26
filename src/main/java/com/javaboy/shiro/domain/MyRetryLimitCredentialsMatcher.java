@@ -1,19 +1,15 @@
 package com.javaboy.shiro.domain;
 
 import com.javaboy.shiro.enums.LoginType;
-import com.javaboy.shiro.util.EncryptUtil;
 import com.javaboy.shiro.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
-import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 
-import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -70,7 +66,6 @@ public class MyRetryLimitCredentialsMatcher extends SimpleCredentialsMatcher {
             CustomToken customToken = (CustomToken) authcToken;
             if (customToken.getLoginType().equals(LoginType.PASSWORD)) {
                 String password = info.getCredentials().toString();
-                System.out.println(password);
                 doCredentialsMatch = super.doCredentialsMatch(authcToken, info);
                 if(doCredentialsMatch){
                     // clear retry count

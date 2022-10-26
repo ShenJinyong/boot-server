@@ -2,9 +2,7 @@ package com.javaboy.shiro.config;
 
 import com.javaboy.shiro.domain.MyRetryLimitCredentialsMatcher;
 import com.javaboy.shiro.domain.UserRealm;
-import com.javaboy.shiro.filter.MyBasicHttpAuthenticationFilter;
-import com.javaboy.shiro.filter.MyPermissionsAuthorizationFilter;
-import com.javaboy.shiro.filter.MyAuthenticationFilter;
+import com.javaboy.shiro.filter.CustomFilter;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -69,20 +67,25 @@ public class ShiroConfig {
     }
 
     // 第三步:创建ShiroFilterFactoryBean
+    /*
+     * anon:无需认证就可以访问
+     * authc:必须认证了才能访问
+     * user:必须拥有记住我功能才能用
+     * perms:拥有对某个资源的权限才能访问
+     * roles:拥有某个角色权限才能访问
+     * */
     @Bean
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("getDefaultWebSecurityManager") DefaultWebSecurityManager defaultWebSecurityManager){
         // 添加过滤器
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         // 设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(defaultWebSecurityManager);
-        /*
-         * anon:无需认证就可以访问
-         * authc:必须认证了才能访问
-         * user:必须拥有记住我功能才能用
-         * perms:拥有对某个资源的权限才能访问
-         * roles:拥有某个角色权限才能访问
-         * */
-        // 使用Shiro的内置过滤器
+
+
+        LinkedHashMap<String, Filter> filterMap = new LinkedHashMap<>();
+        filterMap.put("customFilter",new CustomFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 放行swagger
         filterChainDefinitionMap.put("/swagger-ui/*", "anon");
@@ -92,26 +95,13 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/system/serverUser/login","anon");
         filterChainDefinitionMap.put("/system/serverUser/loginSignature","anon");
         filterChainDefinitionMap.put("/system/serverUser/queryAll","anon");
-        filterChainDefinitionMap.put("/system/serverUser/loginOut","authc");
-        filterChainDefinitionMap.put("/system/serverUser/changePassword","authc");
-        filterChainDefinitionMap.put("/system/serverUser/query","authc");
-        filterChainDefinitionMap.put("/system/serverUser/add","perms[user:add]");
-        filterChainDefinitionMap.put("/system/serverUser/ad","roles[admin]");
+        filterChainDefinitionMap.put("/**","customFilter");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-
-        // 使用自定义的过滤器
-        LinkedHashMap<String, Filter> filters = new LinkedHashMap<>();
-        // 未登录 shiroFilterFactoryBean.setLoginUrl("/toLogin");
-        filters.put("authc", new MyAuthenticationFilter());
-        // 未授权 shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
-        filters.put("perms", new MyPermissionsAuthorizationFilter());
-        // Basic HTTP 身份验证拦截器
-        filters.put("authcBasic",new MyBasicHttpAuthenticationFilter());
-        shiroFilterFactoryBean.setFilters(filters);
-
+        // 未登录
+        shiroFilterFactoryBean.setLoginUrl("/toLogin");
+        // 未授权
+        shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
         return shiroFilterFactoryBean;
     }
-
-
 
 }

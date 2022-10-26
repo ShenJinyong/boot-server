@@ -17,23 +17,6 @@ public class JwtUtil {
 
     // 过期时间5分钟
     private static final long EXPIRE_TIME = 5*60*1000;
-    // 免密登录SECRET
-    private static final String SECRET = "Codvision";
-
-    /**
-     * 生成签名,5min后过期
-     * @param username 用户名
-     * @return 加密的token
-     */
-    public static String sign(String username) {
-        Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
-        Algorithm algorithm = Algorithm.HMAC256(SECRET);
-        // 附带username信息
-        return JWT.create()
-                .withClaim("username", username)
-                .withExpiresAt(date)
-                .sign(algorithm);
-    }
 
     /**
      * 生成签名,5min后过期
@@ -49,24 +32,6 @@ public class JwtUtil {
                 .withClaim("username", username)
                 .withExpiresAt(date)
                 .sign(algorithm);
-    }
-
-    /**
-     * 校验token是否正确
-     * @param token 密钥
-     * @return 是否正确
-     */
-    public static boolean verify(String token, String username) {
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(SECRET);
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("username", username)
-                    .build();
-            DecodedJWT jwt = verifier.verify(token);
-            return true;
-        } catch (Exception exception) {
-            return false;
-        }
     }
 
     /**

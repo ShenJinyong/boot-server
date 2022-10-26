@@ -57,7 +57,7 @@ mybatis-plus:
 # 服务
 server:
   # 端口
-  port: 9050
+  port: 8888
   # ssl证书
   ssl:
     # 证书路径

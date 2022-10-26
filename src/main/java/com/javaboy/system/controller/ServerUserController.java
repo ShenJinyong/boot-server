@@ -140,7 +140,8 @@ public class ServerUserController {
             return ResponseEntity.fail(AppCode.USERNAME_OR_PASSWORD_ERROR);
         }
         // 获取返回结果
-        String sign = JwtUtil.sign(username);
+        String password = serverUserService.findPassword(username);
+        String sign = JwtUtil.sign(username,password);
         return ResponseEntity.ok(sign);
     }
 

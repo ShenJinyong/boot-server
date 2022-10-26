@@ -45,14 +45,22 @@ public class UserRealm extends AuthorizingRealm {
         log.info("执行了授权=>AuthorizationInfo");
         // 获取SimpleAuthorizationInfo实例
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        // 获取当前的用户
-        ServerUser currentUser = (ServerUser)principalCollection.getPrimaryPrincipal();
+        // 获取当前的用户的token
+        String token = (String) principalCollection.getPrimaryPrincipal();
+        // 获取当前用户
+        String username = JwtUtil.getUsername(token);
         // 获取用户角色集
-        Set<String> roles = serverUserService.findRoles(currentUser.getUsername());
+        Set<String> roles = serverUserService.findRoles(username);
+        // 暂时模拟角色
+        roles.add("role-1");
+        roles.add("role-2");
         // 设置用户角色集
         simpleAuthorizationInfo.addRoles(roles);
         // 获取用户权限集
-        Set<String> permissions = serverUserService.findPermissions(currentUser.getUsername());
+        Set<String> permissions = serverUserService.findPermissions(username);
+        // 暂时模拟权限
+        permissions.add("perm-1");
+        permissions.add("perm-2");
         // 设置用户权限集
         simpleAuthorizationInfo.addStringPermissions(permissions);
         // 如果身份认证授权成功，返回一个AuthenticationInfo实现
@@ -65,25 +73,32 @@ public class UserRealm extends AuthorizingRealm {
         log.info("执行了认证=>AuthenticationInfo");
         String token = "";
         String username = "";
+        String password = "";
         // 自定义客户端登录类型处理
         if(authenticationToken instanceof CustomToken){
             CustomToken customToken = (CustomToken) authenticationToken;
             log.info("CustomToken:"+customToken);
             username = customToken.getUsername();
-            log.info("username:"+username);
+            log.info("CustomToken username:"+username);
             if(customToken.getLoginType().equals(LoginType.PASSWORD)){
                 // 账号密码登录处理
-                String password = String.valueOf(customToken.getPassword());
+                password = String.valueOf(customToken.getPassword());
                 token = JwtUtil.sign(username,password);
             }else {
                 // 免密登录处理
-                token = JwtUtil.sign(username);
+                password = serverUserService.findPassword(username);
+                token = JwtUtil.sign(username,password);
             }
-            log.info("token:"+token);
+            log.info("CustomToken password:"+password);
+            log.info("CustomToken token:"+token);
         }else if(authenticationToken instanceof JwtToken){
             // Jwt Token登录类型处理
-            token = (String) authenticationToken.getPrincipal();
+            JwtToken jwtToken = (JwtToken) authenticationToken;
+            log.info("JwtToken:"+jwtToken);
+            token = (String) jwtToken.getPrincipal();
+            log.info("JwtToken token:"+ token);
             username = JwtUtil.getUsername(token);
+            log.info("JwtToken username:"+username);
         }else {
             // 未知登录类型处理
             throw new UnsupportedTokenException();
@@ -91,6 +106,7 @@ public class UserRealm extends AuthorizingRealm {
 
         // 查询用户
         ServerUser serverUser = serverUserService.findByUsername(username);
+        log.info("serverUser:"+serverUser);
         if(serverUser == null){
             // 没找到帐号
             throw new UnknownAccountException();
@@ -101,9 +117,10 @@ public class UserRealm extends AuthorizingRealm {
             }
         }
         // 密码认证，shiro做~
-        String password = serverUser.getPassword();
+        String databasePassword = serverUser.getPassword();
+        log.info("database password:"+databasePassword);
         // 使用SimpleAuthenticationInfo实例认证
-        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(token, password, getName());
+        SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(token, databasePassword, getName());
         // 如果身份认证验证成功，返回一个AuthenticationInfo实现
         return simpleAuthenticationInfo;
     }
