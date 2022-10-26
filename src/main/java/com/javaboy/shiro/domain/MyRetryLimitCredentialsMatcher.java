@@ -65,7 +65,6 @@ public class MyRetryLimitCredentialsMatcher extends SimpleCredentialsMatcher {
         if (authcToken instanceof CustomToken) {
             CustomToken customToken = (CustomToken) authcToken;
             if (customToken.getLoginType().equals(LoginType.PASSWORD)) {
-                String password = info.getCredentials().toString();
                 doCredentialsMatch = super.doCredentialsMatch(authcToken, info);
                 if(doCredentialsMatch){
                     // clear retry count

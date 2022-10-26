@@ -119,6 +119,7 @@ public class UserRealm extends AuthorizingRealm {
         // 密码认证，shiro做~
         String databasePassword = serverUser.getPassword();
         log.info("database password:"+databasePassword);
+        JwtUtil.verify(token,username,databasePassword);
         // 使用SimpleAuthenticationInfo实例认证
         SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(token, databasePassword, getName());
         // 如果身份认证验证成功，返回一个AuthenticationInfo实现
