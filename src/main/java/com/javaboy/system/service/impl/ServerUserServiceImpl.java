@@ -61,4 +61,9 @@ public class ServerUserServiceImpl extends ServiceImpl<ServerUserMapper, ServerU
         return serverUserMapper.findPassword(username);
     }
 
+    @Override
+    public ServerUser findUser(String username) {
+        return serverUserMapper.findUser(username);
+    }
+
 }

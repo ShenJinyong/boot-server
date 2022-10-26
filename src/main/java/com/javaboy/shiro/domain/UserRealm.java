@@ -74,23 +74,38 @@ public class UserRealm extends AuthorizingRealm {
         String token = "";
         String username = "";
         String password = "";
+        String databasePassword = "";
         // 自定义客户端登录类型处理
         if(authenticationToken instanceof CustomToken){
             CustomToken customToken = (CustomToken) authenticationToken;
             log.info("CustomToken:"+customToken);
             username = customToken.getUsername();
             log.info("CustomToken username:"+username);
+            // 查询用户
+            ServerUser serverUser = serverUserService.findByUsername(username);
+            log.info("serverUser:"+serverUser);
+            if(serverUser == null){
+                // 没找到帐号
+                throw new UnknownAccountException();
+            }else{
+                if(serverUser.getDeleted() == 1 || serverUser.getLocked() == 1){
+                    // 账号被删除或者锁定
+                    throw new LockedAccountException();
+                }
+            }
             if(customToken.getLoginType().equals(LoginType.PASSWORD)){
                 // 账号密码登录处理
                 password = String.valueOf(customToken.getPassword());
-                token = JwtUtil.sign(username,password);
+                token = JwtUtil.sign(username,password,serverUser);
             }else {
                 // 免密登录处理
                 password = serverUserService.findPassword(username);
-                token = JwtUtil.sign(username,password);
+                token = JwtUtil.sign(username,password,serverUser);
             }
             log.info("CustomToken password:"+password);
             log.info("CustomToken token:"+token);
+            databasePassword = serverUser.getPassword();
+            log.info("database password:"+databasePassword);
         }else if(authenticationToken instanceof JwtToken){
             // Jwt Token登录类型处理
             JwtToken jwtToken = (JwtToken) authenticationToken;
@@ -99,27 +114,22 @@ public class UserRealm extends AuthorizingRealm {
             log.info("JwtToken token:"+ token);
             username = JwtUtil.getUsername(token);
             log.info("JwtToken username:"+username);
+            ServerUser serverUser = serverUserService.findByUsername(username);
+            log.info("serverUser:"+serverUser);
+            if(serverUser == null){
+                throw new UnknownAccountException();
+            }else{
+                if(serverUser.getDeleted() == 1 || serverUser.getLocked() == 1){
+                    throw new LockedAccountException();
+                }
+            }
+            databasePassword = serverUser.getPassword();
+            log.info("database password:"+databasePassword);
+            JwtUtil.verify(token,username,databasePassword,serverUser);
         }else {
             // 未知登录类型处理
             throw new UnsupportedTokenException();
         }
-
-        // 查询用户
-        ServerUser serverUser = serverUserService.findByUsername(username);
-        log.info("serverUser:"+serverUser);
-        if(serverUser == null){
-            // 没找到帐号
-            throw new UnknownAccountException();
-        }else{
-            if(serverUser.getDeleted() == 1 || serverUser.getLocked() == 1){
-                // 账号被删除或者锁定
-                throw new LockedAccountException();
-            }
-        }
-        // 密码认证，shiro做~
-        String databasePassword = serverUser.getPassword();
-        log.info("database password:"+databasePassword);
-        JwtUtil.verify(token,username,databasePassword);
         // 使用SimpleAuthenticationInfo实例认证
         SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(token, databasePassword, getName());
         // 如果身份认证验证成功，返回一个AuthenticationInfo实现

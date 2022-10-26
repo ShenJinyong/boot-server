@@ -19,4 +19,7 @@ public interface ServerUserMapper extends BaseMapper<ServerUser> {
     @Select("select password from server_user where username = #{username}")
     String findPassword(String username);
 
+    @Select("select * from server_user where username = #{username} limit 1")
+    ServerUser findUser(String username);
+
 }

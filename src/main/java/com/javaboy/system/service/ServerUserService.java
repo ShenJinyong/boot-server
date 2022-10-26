@@ -28,6 +28,7 @@ public interface ServerUserService extends IService<ServerUser> {
     Set<String> findPermissions(String username);
     // 根据用户名查找密码
     String findPassword(String username);
-
+    // 根据用户名查找用户
+    ServerUser findUser(String username);
 
 }
