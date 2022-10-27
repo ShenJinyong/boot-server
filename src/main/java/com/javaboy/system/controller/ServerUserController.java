@@ -35,7 +35,7 @@ public class ServerUserController {
     @Resource
     private ServerUserService serverUserService;
 
-    @PostMapping("/list")
+    @GetMapping("/list")
     @Operation(summary = "用户管理")
     public ResponseEntity<List<ServerUser>> list() {
         List<ServerUser> serverUserList = serverUserService.list();
