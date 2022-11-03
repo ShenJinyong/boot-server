@@ -83,3 +83,38 @@ server:
     key-store-password: Codvision@2020
     # 证书别名
     key-alias: codvision
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        # 开放所有endpoints
+        include: '*'
+        # 关闭
+        # exclude: beans
+      # 基础路径
+      # base-path: /manage
+      # path-mapping:
+        # health修改成healthcheck
+        # health: healthcheck
+  endpoint:
+    shutdown:
+      # 开启/actuator/shutdown
+      enabled: true
+    beans:
+      cache:
+        # 不带参数的端点请求会自动进行缓存时间
+        time-to-live: 100s
+    # server:
+    # 修改默认端口
+    # port: 10111
+    health:
+      # 查看详细的应用健康信息
+      show-details: always
+      # mongo:
+        # 禁用某个组件的健康监测
+        # enabled: false
+      # 禁用所有自动配置的健康指示器
+      #defaults:
+        # enabled: false

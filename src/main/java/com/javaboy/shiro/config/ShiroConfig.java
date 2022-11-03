@@ -90,6 +90,9 @@ public class ShiroConfig {
         // 放行swagger
         filterChainDefinitionMap.put("/swagger-ui/*", "anon");
         filterChainDefinitionMap.put("/v3/api-docs/*", "anon");
+        // 放行actuator
+        filterChainDefinitionMap.put("/actuator", "anon");
+        filterChainDefinitionMap.put("/actuator/**", "anon");
         // 从数据库中读出权限和URL
         filterChainDefinitionMap.put("/system/serverUser/register","anon");
         filterChainDefinitionMap.put("/system/serverUser/login","anon");
