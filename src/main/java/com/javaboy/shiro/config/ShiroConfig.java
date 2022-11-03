@@ -98,9 +98,9 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/**","customFilter");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         // 未登录
-        shiroFilterFactoryBean.setLoginUrl("/toLogin");
+//        shiroFilterFactoryBean.setLoginUrl("/toLogin");
         // 未授权
-        shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
+//        shiroFilterFactoryBean.setUnauthorizedUrl("/noAuth");
         return shiroFilterFactoryBean;
     }
 
