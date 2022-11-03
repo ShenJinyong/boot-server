@@ -42,6 +42,21 @@ spring:
       connection-timeout: 30000
       #配置了这个query则每次拿连接的时候用这个query测试，否则就使用java.sql.Connection的isValid测试  推荐jdbc4不配置。
       connection-test-query: SELECT 1
+  # kafka
+  kafka:
+    # 服务器
+    bootstrap-servers: localhost:9092
+    # Kafka提供的序列化和反序列化类
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    # 消费组
+    consumer:
+      properties:
+        group.id: codvision
+    # 消费监听接口监听的主题不存在时，默认会报错因此要关掉这个
+    listener:
+      missing-topics-fatal: false
 # mybatis-plus配置
 mybatis-plus:
   # 全局配置
@@ -68,4 +83,3 @@ server:
     key-store-password: Codvision@2020
     # 证书别名
     key-alias: codvision
-
