@@ -45,6 +45,17 @@ public class SwaggerConfig {
     }
 
     @Bean
+    public GroupedOpenApi redis(){
+        String[] paths = { "/redis/**" };
+        String[] packagedToMatch = { "com.javaboy.redis.controller" };
+        return GroupedOpenApi.builder().group("Redis管理")
+                .pathsToMatch(paths)
+                // 请求头包含授权码
+                .addOperationCustomizer(operationCustomizer())
+                .packagesToScan(packagedToMatch).build();
+    }
+
+    @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()

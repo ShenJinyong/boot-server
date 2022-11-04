@@ -57,6 +57,26 @@ spring:
     # 消费监听接口监听的主题不存在时，默认会报错因此要关掉这个
     listener:
       missing-topics-fatal: false
+  # redis
+  redis:
+    # ip地址
+    host: 10.0.6.89
+    # 端口
+    port: 6379
+    # 密码
+    password: 123456
+    # lettuce
+    lettuce:
+      # 连接池
+      pool:
+        # 最大连接
+        max-active: 8
+        # 最大空闲连接
+        max-idle: 8
+        # 最小空闲连接
+        min-idle: 0
+        # 连接等待时间
+        max-wait: 100
 # mybatis-plus配置
 mybatis-plus:
   # 全局配置
