@@ -60,11 +60,11 @@ spring:
   # redis
   redis:
     # ip地址
-    host: 10.0.6.89
+    host: 127.0.0.1
     # 端口
     port: 6379
     # 密码
-    password: 123456
+    password:
     # lettuce
     lettuce:
       # 连接池
