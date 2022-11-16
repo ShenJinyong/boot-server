@@ -55,6 +55,17 @@ public class SwaggerConfig {
                 .packagesToScan(packagedToMatch).build();
     }
 
+
+    @Bean
+    public GroupedOpenApi mongodb(){
+        String[] paths = { "/mongodb/**" };
+        String[] packagedToMatch = { "com.javaboy.mongodb.controller" };
+        return GroupedOpenApi.builder().group("mongodb管理")
+                .pathsToMatch(paths)
+                // 请求头包含授权码
+                .addOperationCustomizer(operationCustomizer())
+                .packagesToScan(packagedToMatch).build();
+    }
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()

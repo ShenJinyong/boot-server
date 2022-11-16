@@ -24,7 +24,7 @@ public class RedisController {
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
 
-    @Operation(summary = "Redis测试")
+    @Operation(summary = "Redis集合操作")
     @GetMapping("/set")
     public ResponseEntity redis(){
         redisTemplate.opsForValue().set("name","沈金勇");

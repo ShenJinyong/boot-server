@@ -95,6 +95,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/actuator/**", "anon");
         // 放行redis
         filterChainDefinitionMap.put("/redis/**", "anon");
+        // 放行mongodb
+        filterChainDefinitionMap.put("/mongodb/**", "anon");
         // 从数据库中读出权限和URL
         filterChainDefinitionMap.put("/system/serverUser/register","anon");
         filterChainDefinitionMap.put("/system/serverUser/login","anon");
