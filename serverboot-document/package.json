@@ -1,0 +1,17 @@
+{
+  "name": "ServerBootDocument",
+  "version": "1.0.0",
+  "description": "基于SpringBoot开发的轻量级Java快速开发框架在线文档",
+  "main": "index.js",
+  "repository": "git@github.com:ShenJinyong/ServerBootDocument.git",
+  "author": "ShenJinyong <438217638@qq.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "vitepress": "^1.0.0-alpha.17"
+  },
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:serve": "vitepress serve docs"
+  }
+}
