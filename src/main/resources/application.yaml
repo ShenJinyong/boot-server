@@ -1,4 +1,4 @@
 # 公共配置
 spring:
   profiles:
-    active: test
+    active: prod
